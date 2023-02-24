@@ -2,6 +2,7 @@
 This groups works on a roomie-tinder project. 
 
 Hackmd - plan: https://hackmd.io/jAEaAtQ4Sxu_VG9XbWVrsA
+Docs: https://drive.google.com/drive/folders/1lKQxrVAdl62C225lBE-4DkfZGIO6s2PI?usp=sharing
 
 
 # Necessary tasks
