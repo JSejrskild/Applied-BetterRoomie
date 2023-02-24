@@ -22,12 +22,14 @@ Docs: https://drive.google.com/drive/folders/1lKQxrVAdl62C225lBE-4DkfZGIO6s2PI?u
     - Different categories within the quiz
 - Algorithm that gives a % compatability score
 - Cool app
+- Business plan
 
 
 
 # Minimum Viable product 🥉
 - A compatability quiz 
 - A % compatability algorithm 
+- A business plan?
 # Intermediate viable product 🥈
 - Prototype of visuals for the app
 # Advanced viable product 🥇
