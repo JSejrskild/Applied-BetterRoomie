@@ -32,39 +32,6 @@ roomie_data <- subset(roomie_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_
 
 ```
 
-```{r}
-for (i in (nrow(roomie_data)-1)) print(i)
-```
-
-```{r}
-euclid <- function(a) {
-  
-  pers_1_df <- data.frame()
-  person_routine <- numeric(nrow(a)-1)
-  cleanliness <- numeric(nrow(a)-1)
-  communal_life <- numeric(nrow(a)-1)
-  social_life <- numeric(nrow(a)-1)
-  communication <- numeric(nrow(a)-1)
-  person_nr <- numeric(nrow(a)-1)
-  output <- c()
-
-  for (i in 2:nrow(a)) {
-    person_routine[i-1] <- sqrt(sum((a[1,2:8]-a[i,2:8])^2))
-    cleanliness[i-1] <- sqrt(sum((a[1,9:15]-a[i,9:15])^2))
-    communal_life[i-1] <- sqrt(sum((a[1,16:18]-a[i,16:18])^2))
-    social_life[i-1] <- sqrt(sum((a[1,19:25]-a[i,19:25])^2))
-    communication[i-1] <- sqrt(sum((a[1,26:28]-a[i,26:28])^2))
-    person_nr[i-1] <- a[i,1]
-    output <- c(person_nr,person_routine,cleanliness,communal_life,social_life,communication)
-    rbind(output)
-  }
-  #pers_1_df <- data.frame(person_nr,person_routine,cleanliness,communal_life,social_life,communication)
-  pers_1_df
-}
-
-
-euclid(roomie_data)
-```
 
 ```{r}
 euclid2 <- function(a) {
@@ -90,8 +57,7 @@ euclid2 <- function(a) {
   return(pers_1_df)
 }
 
-pers_1_df <- euclid2(roomie_data)
-pers_1_df
+
 ```
 
 ```{r}
@@ -106,14 +72,74 @@ roomie_experiment_data <- subset(roomie_experiment_data, A401>0)
 roomie_experiment_data$Z001_03 <- trimws(roomie_experiment_data$Z001_03)
 
 roomie1 <- roomie_experiment_data[(roomie_experiment_data$Z001_03 == "paraply05"),]
-roomie2 <- roomie_data[which(roomie_data$Z001_03 == "banan02"),]
-roomie3 <- roomie_data[which(roomie_data$Z001_03 == "kage3"),]
-roomie4 <- roomie_data[which(roomie_data$Z001_03 == "jordbær4"),]
+roomie2 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "newage75"),]
+roomie3 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "gulerod"),]
+roomie4 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "longisland"),]
+roomie5 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "rapand"),]
 
-roomie3 <- subset(roomie3, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+result_roomie1 <- euclid2(roomie1)
+result_roomie2 <- euclid2(roomie2)
+result_roomie3 <- euclid2(roomie3)
+result_roomie4 <- euclid2(roomie4)
+result_roomie5 <- euclid2(roomie5)
+```
 
-roomie4 <- subset(roomie4, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
 
-roomie_data <- subset(roomie_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+```{r}
+# Define your function
+percent <- function(x) {
+  # Perform some operation on the input
+  result <- 1/(1+x)
+  return(result)
+}
+#apartment 1
+percent_person_routine1 <- 1/(1+result_roomie1$person_routine)
+percent_cleanliness1 <- 1/(1+result_roomie1$cleanliness)
+percent_communal_life1 <- 1/(1+result_roomie1$communal_life)
+percent_social_life1 <- 1/(1+result_roomie1$social_life)
+percent_commmunication1 <- 1/(1+result_roomie1$communication)
+
+percent_df1 <- data.frame(percent_person_routine1, percent_cleanliness1, percent_communal_life1, percent_social_life1, percent_commmunication1)
+print(percent_df1)
+
+# apartment 2
+percent_person_routine2 <- 1/(1+result_roomie2$person_routine)
+percent_cleanliness2 <- 1/(1+result_roomie2$cleanliness)
+percent_communal_life2 <- 1/(1+result_roomie2$communal_life)
+percent_social_life2 <- 1/(1+result_roomie2$social_life)
+percent_commmunication2 <- 1/(1+result_roomie2$communication)
+
+percent_df2 <- data.frame(percent_person_routine2, percent_cleanliness2, percent_communal_life2, percent_social_life2, percent_commmunication2)
+print(percent_df2)
+
+#apartment 3
+percent_person_routine3 <- 1/(1+result_roomie3$person_routine)
+percent_cleanliness3 <- 1/(1+result_roomie3$cleanliness)
+percent_communal_life3 <- 1/(1+result_roomie3$communal_life)
+percent_social_life3 <- 1/(1+result_roomie3$social_life)
+percent_commmunication3 <- 1/(1+result_roomie3$communication)
+
+percent_df3 <- data.frame(percent_person_routine3, percent_cleanliness3, percent_communal_life3, percent_social_life3, percent_commmunication3)
+print(percent_df3)
+
+#apartment 4
+percent_person_routine4 <- 1/(1+result_roomie4$person_routine)
+percent_cleanliness4 <- 1/(1+result_roomie4$cleanliness)
+percent_communal_life4 <- 1/(1+result_roomie4$communal_life)
+percent_social_life4 <- 1/(1+result_roomie4$social_life)
+percent_commmunication4 <- 1/(1+result_roomie4$communication)
+
+percent_df4 <- data.frame(percent_person_routine4, percent_cleanliness4, percent_communal_life4, percent_social_life4, percent_commmunication4)
+print(percent_df4)
+
+#apartment 5
+percent_person_routine5 <- 1/(1+result_roomie5$person_routine)
+percent_cleanliness5 <- 1/(1+result_roomie5$cleanliness)
+percent_communal_life5 <- 1/(1+result_roomie5$communal_life)
+percent_social_life5 <- 1/(1+result_roomie5$social_life)
+percent_commmunication5 <- 1/(1+result_roomie5$communication)
+
+percent_df5 <- data.frame(percent_person_routine5, percent_cleanliness5, percent_communal_life5, percent_social_life5, percent_commmunication5)
+print(percent_df5)
 ```
 
