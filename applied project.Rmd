@@ -1,0 +1,119 @@
+---
+title: "Applied Project"
+output: html_document
+date: "2023-04-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls())
+```
+
+```{r}
+pacman::p_load(tidyverse)
+library(tidyverse)
+```
+
+
+```{r}
+roomie_data <- read.csv("Data-Correccted.csv")
+roomie_data$Z001_03 <- tolower(roomie_data$Z001_03)
+
+roomie1 <- roomie_data[which(roomie_data$Z001_03 == "paraply03"),]
+roomie2 <- roomie_data[which(roomie_data$Z001_03 == "banan02"),]
+roomie3 <- roomie_data[which(roomie_data$Z001_03 == "kage3"),]
+roomie4 <- roomie_data[which(roomie_data$Z001_03 == "jordbær4"),]
+
+roomie3 <- subset(roomie3, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+
+roomie4 <- subset(roomie4, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+
+roomie_data <- subset(roomie_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+
+```
+
+```{r}
+for (i in (nrow(roomie_data)-1)) print(i)
+```
+
+```{r}
+euclid <- function(a) {
+  
+  pers_1_df <- data.frame()
+  person_routine <- numeric(nrow(a)-1)
+  cleanliness <- numeric(nrow(a)-1)
+  communal_life <- numeric(nrow(a)-1)
+  social_life <- numeric(nrow(a)-1)
+  communication <- numeric(nrow(a)-1)
+  person_nr <- numeric(nrow(a)-1)
+  output <- c()
+
+  for (i in 2:nrow(a)) {
+    person_routine[i-1] <- sqrt(sum((a[1,2:8]-a[i,2:8])^2))
+    cleanliness[i-1] <- sqrt(sum((a[1,9:15]-a[i,9:15])^2))
+    communal_life[i-1] <- sqrt(sum((a[1,16:18]-a[i,16:18])^2))
+    social_life[i-1] <- sqrt(sum((a[1,19:25]-a[i,19:25])^2))
+    communication[i-1] <- sqrt(sum((a[1,26:28]-a[i,26:28])^2))
+    person_nr[i-1] <- a[i,1]
+    output <- c(person_nr,person_routine,cleanliness,communal_life,social_life,communication)
+    rbind(output)
+  }
+  #pers_1_df <- data.frame(person_nr,person_routine,cleanliness,communal_life,social_life,communication)
+  pers_1_df
+}
+
+
+euclid(roomie_data)
+```
+
+```{r}
+euclid2 <- function(a) {
+
+  pers_1_df <- data.frame()
+  person_routine <- numeric(nrow(a)-1)
+  cleanliness <- numeric(nrow(a)-1)
+  communal_life <- numeric(nrow(a)-1)
+  social_life <- numeric(nrow(a)-1)
+  communication <- numeric(nrow(a)-1)
+  person_nr <- numeric(nrow(a)-1)
+
+  for (i in 2:nrow(a)) {
+    person_routine[i-1] <- sqrt(sum((a[1,2:8]-a[i,2:8])^2))
+    cleanliness[i-1] <- sqrt(sum((a[1,9:15]-a[i,9:15])^2))
+    communal_life[i-1] <- sqrt(sum((a[1,16:18]-a[i,16:18])^2))
+    social_life[i-1] <- sqrt(sum((a[1,19:25]-a[i,19:25])^2))
+    communication[i-1] <- sqrt(sum((a[1,26:28]-a[i,26:28])^2))
+    person_nr[i-1] <- a[i,1]
+  }
+  
+  pers_1_df <- data.frame(person_nr,person_routine,cleanliness,communal_life,social_life,communication)
+  return(pers_1_df)
+}
+
+pers_1_df <- euclid2(roomie_data)
+pers_1_df
+```
+
+```{r}
+roomie_experiment_data <- read.csv("data_test.csv")
+roomie_experiment_data <- subset(roomie_experiment_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME,SERIAL,REF))
+roomie_experiment_data$Z001_03 <- tolower(roomie_experiment_data$Z001_03)
+# remove rows with NA values
+roomie_experiment_data <- na.omit(roomie_experiment_data)
+# remove rows with negative values
+roomie_experiment_data <- subset(roomie_experiment_data, A401>0)
+# trim leading and trailing spaces and overwrite original variable
+roomie_experiment_data$Z001_03 <- trimws(roomie_experiment_data$Z001_03)
+
+roomie1 <- roomie_experiment_data[(roomie_experiment_data$Z001_03 == "paraply05"),]
+roomie2 <- roomie_data[which(roomie_data$Z001_03 == "banan02"),]
+roomie3 <- roomie_data[which(roomie_data$Z001_03 == "kage3"),]
+roomie4 <- roomie_data[which(roomie_data$Z001_03 == "jordbær4"),]
+
+roomie3 <- subset(roomie3, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+
+roomie4 <- subset(roomie4, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+
+roomie_data <- subset(roomie_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
+```
+
