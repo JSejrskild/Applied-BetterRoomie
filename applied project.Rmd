@@ -15,6 +15,7 @@ library(tidyverse)
 ```
 
 
+# Test dataset (not necessary to run!)
 ```{r}
 roomie_data <- read.csv("Data-Correccted.csv")
 roomie_data$Z001_03 <- tolower(roomie_data$Z001_03)
@@ -31,8 +32,9 @@ roomie4 <- subset(roomie4, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,L
 roomie_data <- subset(roomie_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME))
 
 ```
-
-
+# Functions
+## Old function (gives too low results)
+DONT RUN!!!!
 ```{r}
 euclid2 <- function(a) {
 
@@ -58,8 +60,65 @@ euclid2 <- function(a) {
 }
 
 
+
 ```
 
+## New and improved function (Final function maybe?)
+```{r}
+euclidv2 <- function(a) {
+  n_cols <- 27  # number of columns to compute distances for
+  
+  # create empty data frame to store results
+  pers_df <- data.frame(matrix(nrow = nrow(a) - 1, ncol = n_cols + 1))
+  
+  # name the columns of the data frame
+  colnames(pers_df) <- c("person_nr", paste0("dist_", 1:n_cols))
+  
+  # iterate through each column and compute distances for each person
+  for (j in 2:28) {
+    if (j > n_cols + 1) break  # exit the loop if we've computed all the columns
+    dist_vec <- numeric(nrow(a) - 1)
+    for (i in 2:nrow(a)) {
+      dist_vec[i-1] <- sqrt(sum((a[1,j]-a[i,j])^2))
+    }
+    pers_df[, j] <- dist_vec  # subtract 1 to match the column index
+  }
+  
+  # add person number column to data frame
+  pers_df$person_nr <- a[1, 1]
+  
+  return(pers_df)
+}
+
+```
+
+## Function to calculate percentage of compatibility 
+```{r}
+# Define your function
+percent <- function(x) {
+  # Perform some operation on the input
+  result <- 1/(1+x)
+  return(result)
+}
+
+```
+
+## Function that summarizes the percentage data into categories 
+```{r}
+percent2 <- function(a) {
+  person_routine <- apply(a[, 1:7], 1, mean)
+  cleanliness <- apply(a[, 8:14], 1, mean)
+  communal_life <- apply(a[, 15:17], 1, mean)
+  social_life <- apply(a[, 18:24], 1, mean)
+  communication <- apply(a[, 25:27], 1, mean)
+  
+  pers_1_df <- data.frame(person_routine, cleanliness, communal_life, social_life, communication)
+  return(pers_1_df)
+}
+
+```
+
+# Survey data
 ```{r}
 roomie_experiment_data <- read.csv("data_test.csv")
 roomie_experiment_data <- subset(roomie_experiment_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME,SERIAL,REF))
@@ -76,22 +135,49 @@ roomie2 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "newag
 roomie3 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "gulerod"),]
 roomie4 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "longisland"),]
 roomie5 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "rapand"),]
-
-result_roomie1 <- euclid2(roomie1)
-result_roomie2 <- euclid2(roomie2)
-result_roomie3 <- euclid2(roomie3)
-result_roomie4 <- euclid2(roomie4)
-result_roomie5 <- euclid2(roomie5)
 ```
 
 
+
+
+
+
+# Data analysis
+## Apartment 1
 ```{r}
-# Define your function
-percent <- function(x) {
-  # Perform some operation on the input
-  result <- 1/(1+x)
-  return(result)
-}
+v2result1 <- euclidv2(roomie1)
+v2percent1 <- percent(v2result1[1:2,2:28])
+v2cat_percent1 <- percent2(v2percent1)
+```
+
+## Apartment 2
+```{r}
+v2result2 <- euclidv2(roomie2)
+v2percent2 <- percent(v2result2[1,2:28])
+v2cat_percent2 <- percent2(v2percent2)
+```
+## Apartment 3
+```{r}
+v2result3 <- euclidv2(roomie3)
+v2percent3 <- percent(v2result3[1,2:28])
+v2cat_percent3 <- percent2(v2percent3)
+```
+## Apartment 4
+```{r}
+v2result4 <- euclidv2(roomie4)
+v2percent4 <- percent(v2result4[1,2:28])
+v2cat_percent4 <- percent2(v2percent4)
+```
+## Apartment 5
+```{r}
+v2result5 <- euclidv2(roomie5)
+v2percent5 <- percent(v2result5[1,2:28])
+v2cat_percent5 <- percent2(v2percent5)
+```
+
+
+# Code used that we first tried but didnt give the results we wanted
+```{r}
 #apartment 1
 percent_person_routine1 <- 1/(1+result_roomie1$person_routine)
 percent_cleanliness1 <- 1/(1+result_roomie1$cleanliness)
@@ -142,4 +228,5 @@ percent_commmunication5 <- 1/(1+result_roomie5$communication)
 percent_df5 <- data.frame(percent_person_routine5, percent_cleanliness5, percent_communal_life5, percent_social_life5, percent_commmunication5)
 print(percent_df5)
 ```
+
 
