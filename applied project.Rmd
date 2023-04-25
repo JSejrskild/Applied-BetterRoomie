@@ -12,6 +12,8 @@ rm(list = ls())
 ```{r}
 pacman::p_load(tidyverse)
 library(tidyverse)
+library(dplyr)
+
 ```
 
 
@@ -128,6 +130,8 @@ total_sim <- function(a,b) {
 ```
 
 
+
+# FROM HERE!!!
 # Survey data
 ```{r}
 roomie_experiment_data <- read.csv("data_test.csv")
@@ -145,6 +149,32 @@ roomie2 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "newag
 roomie3 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "gulerod"),]
 roomie4 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "longisland"),]
 roomie5 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "rapand"),]
+```
+
+# Plotting frustration, and roomieship
+```{r}
+roomie_experiment_data$A403 <- as.numeric(roomie_experiment_data$A403)
+roomie_experiment_data$A402 <- as.numeric(roomie_experiment_data$A402)
+roomie_experiment_data$A404 <- as.numeric(roomie_experiment_data$A404)
+
+roomie_experiment_data$flipA402 <- 6-(as.numeric(roomie_experiment_data$A402))
+roomie_experiment_data$flipA403 <- 6-(as.numeric(roomie_experiment_data$A403))
+
+
+
+```
+
+```{r}
+ggplot(roomie_experiment_data, aes( x = flipA402, #Frustration
+                  y = flipA403,
+                  fill= A404,
+                  colour=A404))+ # Roomieship
+  ylim(0,5)+xlim(0,5)+
+  geom_point(size=2, shape=18)+
+  scale_fill_brewer(palette ="BuPu")+
+  labs( x = "Frustration",
+        y = "Roomieship")+
+  theme_minimal()
 ```
 
 
