@@ -12,8 +12,6 @@ rm(list = ls())
 ```{r}
 pacman::p_load(tidyverse)
 library(tidyverse)
-library(dplyr)
-
 ```
 
 
@@ -98,7 +96,7 @@ euclidv2 <- function(a) {
 ```{r}
 # Define your function
 percent <- function(x) {
-  # Perform some operation on the input
+  # convert input to recciprocal data
   result <- 1/(1+x)
   return(result)
 }
@@ -107,13 +105,15 @@ percent <- function(x) {
 
 ## Function that summarizes the percentage data into categories 
 ```{r}
+# Define function to summarize reciprocal data into categories
 percent2 <- function(a) {
+  # Take the mean of each category
   person_routine <- apply(a[, 33:36], 1, mean)
   cleanliness <- apply(a[, 1:7], 1, mean)
   communal_life <- apply(a[, 8:14], 1, mean)
   social_life <- apply(a[, 15:17], 1, mean)
   communication <- apply(a[, 18:23], 1, mean)
-  
+  #Create a new data frame with the summarized percentage values. 
   pers_1_df <- data.frame(person_routine, cleanliness, communal_life, social_life, communication)
   return(pers_1_df)
 }
@@ -121,21 +121,113 @@ percent2 <- function(a) {
 ```
 
 # Function for total similarity
+
+1 = cleanliness
+2 = communal life 
+3 = social life
+4 = communication
+5 = personal routine
 ```{r}
+# Defining function to calculate total similarity score based on weights and biases
 total_sim <- function(a,b) {
+  for (i in 1:nrow(a)) {
+    # Saving un-weighted category percentages in variables
+    cleanliness <- a[i,2]
+    communal_life <- a[i,3]
+    social_life <- a[i,4]
+    communication <- a[i,5]
+    personal_routine <- a[i,1]
   
+    #Fectching categorical priority choices from survey
+    first_pri <- b[1,29]
+    second_pri <- b[1,30]
+    third_pri <- b[1,31]
+    fourth_pri <- b[1,32]
+    fifth_pri <- b[1,33]
   
+    # Redefining the first priority value to account for 40% of the total score
+    if (first_pri == 1) {
+      cleanliness <- cleanliness*40
+      } else if (first_pri == 2) {
+      communal_life <- communal_life*40
+      } else if (first_pri == 3) {
+      social_life <- social_life*40
+      } else if (first_pri == 4) {
+      communication <- communication*40
+      } else if (first_pri == 5) {
+      personal_routine <- personal_routine*40
+      } 
+  
+    # Redefining the second priority value to account for 30% of the total score
+    if (second_pri == 1) {
+      cleanliness <- cleanliness*30
+      } else if (second_pri == 2) {
+      communal_life <- communal_life*30
+      } else if (second_pri == 3) {
+      social_life <- social_life*30
+      } else if (second_pri == 4) {
+      communication <- communication*30
+      } else if (second_pri == 5) {
+      personal_routine <- personal_routine*30
+      } 
+
+    # Redefining the third priority value to account for 15% of the total score
+     if (third_pri == 1) {
+      cleanliness <- cleanliness*15
+      } else if (third_pri == 2) {
+      communal_life <- communal_life*15
+      } else if (third_pri == 3) {
+      social_life <- social_life*15
+      } else if (third_pri == 4) {
+      communication <- communication*15
+      } else if (third_pri == 5) {
+      personal_routine <- personal_routine*15
+      } 
+  
+    # Redefining the fourth priority value to account for 10% of the total score
+    if (fourth_pri == 1) {
+      cleanliness <- cleanliness*10
+      } else if (fourth_pri == 2) {
+      communal_life <- communal_life*10
+      } else if (fourth_pri == 3) {
+      social_life <- social_life*10
+      } else if (fourth_pri == 4) {
+      communication <- communication*10
+      } else if (fourth_pri == 5) {
+      personal_routine <- personal_routine*10
+      } 
+  
+    # Redefining the fifth priority value to account for 5% of the total score
+    if (fifth_pri == 1) {
+      cleanliness <- cleanliness*5
+      } else if (fifth_pri == 2) {
+      communal_life <- communal_life*5
+      } else if (fifth_pri == 3) {
+      social_life <- social_life*5
+      } else if (fifth_pri == 4) {
+      communication <- communication*5
+      } else if (fifth_pri == 5) {
+      personal_routine <- personal_routine*5
+      } 
+  
+      # summing all values together and dividing by 100 to get percentage value
+      total_score <- (sum(cleanliness, communal_life, social_life, communication,
+                    personal_routine))/100
+    print(total_score)
+  }
 }
-  
 ```
 
 
-
-# FROM HERE!!!
 # Survey data
 ```{r}
+#loading in data from public survey
 roomie_experiment_data <- read.csv("data_test.csv")
+
+#removing unnecessary columns from dataframe
 roomie_experiment_data <- subset(roomie_experiment_data, select = -c(QUESTNNR,MODE,STARTED,FINISHED,Q_VIEWER,LASTPAGE,MAXPAGE,MISSING,MISSREL,TIME_RSI,DEG_TIME,SERIAL,REF))
+
+#lower casing the code word chosen
 roomie_experiment_data$Z001_03 <- tolower(roomie_experiment_data$Z001_03)
 # remove rows with NA values
 roomie_experiment_data <- na.omit(roomie_experiment_data)
@@ -144,37 +236,13 @@ roomie_experiment_data <- subset(roomie_experiment_data, A401>0)
 # trim leading and trailing spaces and overwrite original variable
 roomie_experiment_data$Z001_03 <- trimws(roomie_experiment_data$Z001_03)
 
+
+#splitting up data table into roomie groups
 roomie1 <- roomie_experiment_data[(roomie_experiment_data$Z001_03 == "paraply05"),]
 roomie2 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "newage75"),]
 roomie3 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "gulerod"),]
 roomie4 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "longisland"),]
 roomie5 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "rapand"),]
-```
-
-# Plotting frustration, and roomieship
-```{r}
-roomie_experiment_data$A403 <- as.numeric(roomie_experiment_data$A403)
-roomie_experiment_data$A402 <- as.numeric(roomie_experiment_data$A402)
-roomie_experiment_data$A404 <- as.numeric(roomie_experiment_data$A404)
-
-roomie_experiment_data$flipA402 <- 6-(as.numeric(roomie_experiment_data$A402))
-roomie_experiment_data$flipA403 <- 6-(as.numeric(roomie_experiment_data$A403))
-
-
-
-```
-
-```{r}
-ggplot(roomie_experiment_data, aes( x = flipA402, #Frustration
-                  y = flipA403,
-                  fill= A404,
-                  colour=A404))+ # Roomieship
-  ylim(0,5)+xlim(0,5)+
-  geom_point(size=2, shape=18)+
-  scale_fill_brewer(palette ="BuPu")+
-  labs( x = "Frustration",
-        y = "Roomieship")+
-  theme_minimal()
 ```
 
 
@@ -185,34 +253,46 @@ ggplot(roomie_experiment_data, aes( x = flipA402, #Frustration
 # Data analysis
 ## Apartment 1
 ```{r}
+# Runging all necessary functions on roomie group 1
 v2result1 <- euclidv2(roomie1)
 v2percent1 <- percent(v2result1[,2:37])
 v2cat_percent1 <- percent2(v2percent1)
+total_sim(v2cat_percent1,roomie1)
 ```
 
 ## Apartment 2
 ```{r}
+
+# Runging all necessary functions on roomie group 2
 v2result2 <- euclidv2(roomie2)
 v2percent2 <- percent(v2result2[,2:37])
 v2cat_percent2 <- percent2(v2percent2)
+total_sim(v2cat_percent2,roomie2)
 ```
 ## Apartment 3
 ```{r}
+
+# Runging all necessary functions on roomie group 3
 v2result3 <- euclidv2(roomie3)
 v2percent3 <- percent(v2result3[1,2:37])
 v2cat_percent3 <- percent2(v2percent3)
+total_sim(v2cat_percent3,roomie3)
 ```
 ## Apartment 4
 ```{r}
+# Runging all necessary functions on roomie group 4
 v2result4 <- euclidv2(roomie4)
 v2percent4 <- percent(v2result4[1,2:37])
 v2cat_percent4 <- percent2(v2percent4)
+total_sim(v2cat_percent4,roomie4)
 ```
 ## Apartment 5
 ```{r}
+# Runging all necessary functions on roomie group 5
 v2result5 <- euclidv2(roomie5)
 v2percent5 <- percent(v2result5[1,2:37])
 v2cat_percent5 <- percent2(v2percent5)
+total_sim(v2cat_percent5,roomie5)
 ```
 
 
