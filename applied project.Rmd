@@ -245,8 +245,12 @@ roomie4 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "longi
 roomie5 <- roomie_experiment_data[which(roomie_experiment_data$Z001_03 == "rapand"),]
 ```
 
-
-
+```{r}
+total_roomie <- rbind(roomie1,roomie2, roomie3,roomie4,roomie5)
+mean(total_roomie$Z003_01)
+sd(total_roomie$Z003_01)
+count(total_roomie$Z002)
+```
 
 
 
